@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module Register16bit (
     input wire Clock,
     input wire E,
