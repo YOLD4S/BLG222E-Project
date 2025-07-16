@@ -9,6 +9,7 @@ module Register32bit (
 );
 
 always @(posedge clk) begin
+    if (E) begin
         case (FunSel)
             3'b000: Q <= Q - 1;                         // Decrement
             3'b001: Q <= Q + 1;                         // Increment
@@ -20,5 +21,5 @@ always @(posedge clk) begin
             3'b111: Q <= {{16{I[15]}}, I[15:0]};          // Sign extend (16bit)
         endcase
     end
-
+end
 endmodule

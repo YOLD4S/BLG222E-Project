@@ -9,6 +9,7 @@ module Register16bit (
 );
 
 always @(posedge Clock) begin
+    if (E) begin
         case (FunSel)
             2'b00: Q <= Q - 1;        // Decrement
             2'b01: Q <= Q + 1;        // Increment
@@ -16,5 +17,7 @@ always @(posedge Clock) begin
             2'b11: Q <= 16'b0;        // Clear
         endcase
     end
+end
+
 
 endmodule
