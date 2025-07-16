@@ -13,15 +13,17 @@ module ArithmeticLogicUnit (
     wire C_in, C_carrier, C_out;
     wire L_in, LR_carrier, R_out;
 
-    wire a,b,c,d = FunSel[3:0];
+    wire a,b,c,d;
+    assign {a,b,c,d} = FunSel[3:0];
     wire Z_en = WF;
     wire C_en = WF & (~a&b | b&~d | b&c);
     wire N_en = WF & ~(a&b&~c&d);
     wire O_en = WF & (~a&b&~c + ~a&b&~d);
     wire widthSelect = FunSel[4];
-    wire rightFunSel [3:0] = (FunSel == 5'b11101) ? 4'b1100 : FunSel[3:0];
+    wire [3:0] rightFunSel = (FunSel == 5'b11101) ? 4'b1100 : FunSel[3:0];
 
-    assign C_in = (~a&d | c&~d) ? FlagsOut[1] : 1'b0; // C_in is set based on the conditions of FunSel bits a, b, c, d
+    assign C_in = (~a&d | c&~d) ? FlagsOut[1] : 1'b0;
+    assign L_in = d ? FlagsOut[1] : 1'b0;
 
     halfALU leftALU (
         .C_in(C_carrier),
@@ -50,10 +52,10 @@ module ArithmeticLogicUnit (
     assign ALUOut[32] = widthSelect ? {leftALU.ALUOut, rightALU.ALUOut} : {{16{rightALU.ALUOut[15]}}, rightALU.ALUOut};
 
     always @(posedge Clock) begin
-        Z <= Z_en & (ALUOut == 0);
-        N <= N_en & (widthSelect ? ALUOut[31] : ALUOut[15]);
-        C <= C_en & C_out;
-        O <= O_en & ((A[31] == B[31]) && (ALUOut[31] != A[31]));
+        FlagsOut[0] <= Z_en & (ALUOut == 0);
+        FlagsOut[2] <= N_en & (widthSelect ? ALUOut[31] : ALUOut[15]);
+        FlagsOut[1] <= C_en & C_out;
+        FlagsOut[3] <= O_en & ((A[31] == B[31]) && (ALUOut[31] != A[31]));
     end
 
 endmodule
