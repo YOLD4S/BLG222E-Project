@@ -8,7 +8,7 @@ module Register32bit (
     output reg [31:0] Q
 );
 
-always @(posedge clk) begin
+always @(posedge Clock) begin
         case (FunSel)
             3'b000: Q <= Q - 1;                         // Decrement
             3'b001: Q <= Q + 1;                         // Increment
