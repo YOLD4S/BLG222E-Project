@@ -9,10 +9,11 @@ module AddressRegisterFile(
     output wire [15:0] OutD
 );
     wire PC_E, AR_E, SP_E;
+    wire [15:0] Q_PC, Q_AR, Q_SP;
 
-    Register16bit PC(.I(I), .E(PC_E), .FunSel(FunSel), .Clock(Clock), .Q(reg_file[0]));
-    Register16bit AR(.I(I), .E(AR_E), .FunSel(FunSel), .Clock(Clock), .Q(reg_file[1]));
-    Register16bit SP(.I(I), .E(SP_E), .FunSel(FunSel), .Clock(Clock), .Q(reg_file[2]));
+    Register16bit PC(.I(I), .E(PC_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_PC));
+    Register16bit AR(.I(I), .E(AR_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_AR));
+    Register16bit SP(.I(I), .E(SP_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_SP));
 
     assign PC_E = RegSel[0];
     assign AR_E = RegSel[1];
