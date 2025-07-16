@@ -6,7 +6,7 @@ module Register16bit (
     output reg [15:0] Q
 );
 
-always @(posedge clk) begin
+always @(posedge Clock) begin
         case (FunSel)
             2'b00: Q <= Q - 1;        // Decrement
             2'b01: Q <= Q + 1;        // Increment
