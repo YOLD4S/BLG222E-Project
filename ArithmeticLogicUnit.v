@@ -1,12 +1,12 @@
 // `timescale 1ns / 1ps
 
 // module ArithmeticLogicUnit (
-//     input wire [32:0] A,
-//     input wire [32:0] B,
+//     input wire [31:0] A,
+//     input wire [31:0] B,
 //     input wire [4:0] FunSel,
 //     input wire WF,
 //     input wire Clock,
-//     output wire [32:0] ALUOut,
+//     output wire [31:0] ALUOut,
 //     output reg [3:0] FlagsOut // Z, C, N, O
 // );
 
@@ -47,7 +47,7 @@
 //         .L_in(LR_carrier),
 //         .R_out(R_out)
 //     );
-//     assign ALUOut[32] = widthSelect ? {leftALU.ALUOut, rightALU.ALUOut} : {{16{rightALU.ALUOut[15]}}, rightALU.ALUOut};
+//     assign ALUOut[31] = widthSelect ? {leftALU.ALUOut, rightALU.ALUOut} : {{16{rightALU.ALUOut[15]}}, rightALU.ALUOut};
 
 //     always @(posedge Clock) begin
 //         if (Z_en)
@@ -156,7 +156,7 @@ module ArithmeticLogicUnit (
                  {A[31], A[31:1]}; // CSR
 
     always @(posedge Clock) begin
-        if (Z_en)
+        if (WF)
             FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
             FlagsOut[2] <= widthSelect ? C_out : C_carrier;
