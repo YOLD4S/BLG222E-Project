@@ -73,7 +73,7 @@ module ArithmeticLogicUnitSimulation();
         WF =1;
         #5
         clk.Clock();
-        F.CheckValues(ALUOut,32'h12345678, test_no, "ALUOut");
+        F.CheckValues(ALUOut,32'h1438A7A8, test_no, "ALUOut");
         F.CheckValues(Z,0, test_no, "Z");
         F.CheckValues(C,0, test_no, "C");
         F.CheckValues(N,0, test_no, "N");

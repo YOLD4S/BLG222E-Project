@@ -50,10 +50,23 @@ module ArithmeticLogicUnit (
     assign ALUOut[32] = widthSelect ? {leftALU.ALUOut, rightALU.ALUOut} : {{16{rightALU.ALUOut[15]}}, rightALU.ALUOut};
 
     always @(posedge Clock) begin
-        FlagsOut[0] <= Z_en & (ALUOut == 0);
-        FlagsOut[2] <= N_en & (widthSelect ? ALUOut[31] : ALUOut[15]);
-        FlagsOut[1] <= C_en & C_out;
-        FlagsOut[3] <= O_en & ((A[31] == B[31]) && (ALUOut[31] != A[31]));
+        if (Z_en)
+            FlagsOut[0] <= (ALUOut == 0);
+        else
+            FlagsOut[0] <= FlagsOut[0];
+        if (C_en)
+            FlagsOut[1] <= widthSelect ? C_out : C_carrier;
+        else
+            FlagsOut[1] <= FlagsOut[1];
+        if (N_en)
+            FlagsOut[2] <= ALUOut[31];
+        else
+            FlagsOut[2] <= FlagsOut[2];
+        if (O_en)
+            FlagsOut[3] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
+        else
+            FlagsOut[3] <= FlagsOut[3];
+
     end
 
 endmodule
@@ -100,28 +113,4 @@ module halfALU (
                  (FunSel == 4'b1110) ? {L_in, A[15:1]} : // CSL
                  {A[15], A[15:1]}; // CSR
 
-    // always @(posedge Clock) begin
-    //     case (FunSel)
-    //         4'b0000: ALUOut <= A;
-    //         4'b0001: ALUOut <= B;
-    //         4'b0010: ALUOut <= ~A;
-    //         4'b0011: ALUOut <= ~B;
-    //         4'b0100: ALUOut <= A + B + C_in;     //    A + B
-    //         4'b0101: ALUOut <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
-    //         4'b0110: ALUOut <= A - B;
-    //         4'b0111: ALUOut <= A & B;
-    //         4'b1000: ALUOut <= A | B;
-    //         4'b1001: ALUOut <= A ^ B;
-    //         4'b1010: ALUOut <= ~(A & B);
-    //         4'b1011: ALUOut <= {A, C_in}; // LSL A
-    //         4'b1100: ALUOut <= {L_in, A[15:1]}; // LSR A
-    //         4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
-    //         4'b1110: ALUOut <= {A, C_in}; // CSL A
-    //         4'b1111: ALUOut <= {L_in, A[15:1]}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
-    //     endcase
-    // end
 endmodule
-
-
-// L_in logic ekle (ana modulde)
-// ASR duzelt (Ana modulde sag yarima LSR sinyali gondereerek olabilir)
