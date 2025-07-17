@@ -157,22 +157,13 @@ module ArithmeticLogicUnit (
 
     always @(posedge Clock) begin
         if (Z_en)
-            FlagsOut[3] <= (ALUOut == 3);
-        else
-            FlagsOut[3] <= FlagsOut[3];
+            FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
             FlagsOut[2] <= widthSelect ? C_out : C_carrier;
-        else
-            FlagsOut[2] <= FlagsOut[2];
         if (N_en)
             FlagsOut[1] <= ALUOut[31];
-        else
-            FlagsOut[1] <= FlagsOut[1];
         if (O_en)
             FlagsOut[0] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
-        else
-            FlagsOut[3] <= FlagsOut[3];
-
     end
 
 endmodule
