@@ -137,7 +137,7 @@ module ArithmeticLogicUnit (
     wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
     wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
 
-    assign ALUOut = (FunSel == 4'b0000) ? A : 
+    assign {C_out, ALUOut} = (FunSel == 4'b0000) ? A : 
                  (FunSel == 4'b0001) ? B :
                  (FunSel == 4'b0010) ? ~A :
                  (FunSel == 4'b0011) ? ~B :
@@ -158,7 +158,7 @@ module ArithmeticLogicUnit (
         if (Z_en)
             FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
-            FlagsOut[2] <= widthSelect ? C_out : C_carrier;
+            FlagsOut[2] <= widthSelect ? C_out : (A[26] ^ B[26] ^ ALUOut[26]);
         if (N_en)
             FlagsOut[1] <= ALUOut[31];
         if (O_en)
