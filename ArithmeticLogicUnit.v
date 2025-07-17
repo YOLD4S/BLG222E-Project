@@ -22,24 +22,22 @@ module ArithmeticLogicUnit (
     // wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
     // wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
 
-    // assign {C_out, ALUOut} = (FunSel == 4'b0000) ? {1'b0, A} : 
-    //              (FunSel == 4'b0001) ? {1'b0, B} :
-    //              (FunSel == 4'b0010) ? {1'b0, ~A} :
-    //              (FunSel == 4'b0011) ? {1'b0, ~B} :
-    //              (FunSel == 4'b0100) ? A + B :
-    //              (FunSel == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
-    //              (FunSel == 4'b0110) ? A - B :
-    //              (FunSel == 4'b0111) ? {1'b0, A & B} :
-    //              (FunSel == 4'b1000) ? {1'b0, A | B} :
-    //              (FunSel == 4'b1001) ? {1'b0, A ^ B} :
-    //              (FunSel == 4'b1010) ? {1'b0, ~(A & B)} :
-    //              (FunSel == 4'b1011) ? {A[31:0], 1'b0} : // LSL
-    //              (FunSel == 4'b1100) ? {A[0], 1'b0, A[31:1]} : // LSR
-    //              (FunSel == 4'b1101) ? {1'b0, A[31], A[31:1]} : // ASR
-    //              (FunSel == 4'b1110) ? {A[31:0], FlagsOut[2]} : // CSL
-    //              {A[0], FlagsOut[2], A[31:1]}; // CSR
-
-    assign ALUOut = A + B;
+    assign ALUOut = (FunSel == 4'b0000) ? A : 
+                 (FunSel == 4'b0001) ? B :
+                 (FunSel == 4'b0010) ? ~A :
+                 (FunSel == 4'b0011) ? ~B :
+                 (FunSel == 4'b0100) ? A + B :
+                 (FunSel == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
+                 (FunSel == 4'b0110) ? A - B :
+                 (FunSel == 4'b0111) ? A & B :
+                 (FunSel == 4'b1000) ? A | B :
+                 (FunSel == 4'b1001) ? A ^ B :
+                 (FunSel == 4'b1010) ? ~(A & B) :
+                 (FunSel == 4'b1011) ? {A[31:1], 1'b0} : // LSL
+                 (FunSel == 4'b1100) ? {1'b0, A[31:1]} : // LSR
+                 (FunSel == 4'b1101) ? {A[31], A[31:1]} : // ASR
+                 (FunSel == 4'b1110) ? {FlagsOut[2], A[31:1]} : // CSL
+                 {FlagsOut[2], A[31:1]}; // CSR
 
     always @(posedge Clock) begin
         if (Z_en)
