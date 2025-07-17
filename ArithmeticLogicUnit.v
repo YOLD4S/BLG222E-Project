@@ -1,3 +1,66 @@
+`timescale 1ns / 1ps
+
+module ArithmeticLogicUnit (
+    input wire [31:0] A,
+    input wire [31:0] B,
+    input wire [4:0] FunSel,
+    input wire WF,
+    input wire Clock,
+    output wire [31:0] ALUOut,
+    output reg [3:0] FlagsOut // {Z, C, N, O}
+);
+    wire widthSelect = FunSel[4];
+    wire [3:0] f = FunSel[3:0];
+
+    wire Z_en = WF;
+    wire C_en = WF & (~f[0]&f[1] | f[1]&~f[3] | f[1]&f[2]);
+    wire N_en = WF & ~(f[0]&f[1]&~f[2]&f[3]);
+    wire O_en = WF & (~f[0]&f[1]&~f[2] + ~f[0]&f[1]&~f[3]);
+    
+    wire C_out;
+
+    // wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
+    // wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
+
+    assign {C_out, ALUOut} = (FunSel == 4'b0000) ? A : 
+                 (FunSel == 4'b0001) ? {1'b0, B} :
+                 (FunSel == 4'b0010) ? {1'b0, ~A} :
+                 (FunSel == 4'b0011) ? {1'b0, ~B} :
+                 (FunSel == 4'b0100) ? A + B :
+                 (FunSel == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
+                 (FunSel == 4'b0110) ? A - B :
+                 (FunSel == 4'b0111) ? {1'b0, A & B} :
+                 (FunSel == 4'b1000) ? {1'b0, A | B} :
+                 (FunSel == 4'b1001) ? {1'b0, A ^ B} :
+                 (FunSel == 4'b1010) ? {1'b0, ~(A & B)} :
+                 (FunSel == 4'b1011) ? {A[31:0], 1'b0} : // LSL
+                 (FunSel == 4'b1100) ? {A[0], 1'b0, A[31:1]} : // LSR
+                 (FunSel == 4'b1101) ? {1'b0, A[31], A[31:1]} : // ASR
+                 (FunSel == 4'b1110) ? {A[31:0], FlagsOut[2]} : // CSL
+                 {A[0], FlagsOut[2], A[31:1]}; // CSR
+
+    always @(posedge Clock) begin
+        if (Z_en)
+            FlagsOut[3] <= (ALUOut == 0);
+        if (C_en)
+            FlagsOut[2] <= widthSelect ? C_out : (A[26] ^ B[26] ^ ALUOut[26]);
+        if (N_en)
+            FlagsOut[1] <= ALUOut[31];
+        if (O_en)
+            FlagsOut[0] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
+    end
+
+endmodule
+
+
+
+
+
+
+
+
+
+
 // `timescale 1ns / 1ps
 
 // module ArithmeticLogicUnit (
@@ -114,57 +177,3 @@
 //                  {A[15], A[15:1]}; // CSR
 
 // endmodule
-
-`timescale 1ns / 1ps
-
-module ArithmeticLogicUnit (
-    input wire [31:0] A,
-    input wire [31:0] B,
-    input wire [4:0] FunSel,
-    input wire WF,
-    input wire Clock,
-    output wire [31:0] ALUOut,
-    output reg [3:0] FlagsOut // {Z, C, N, O}
-);
-    wire a,b,c,d;
-    assign {a,b,c,d} = FunSel[3:0];
-    wire Z_en = WF;
-    wire C_en = WF & (~a&b | b&~d | b&c);
-    wire N_en = WF & ~(a&b&~c&d);
-    wire O_en = WF & (~a&b&~c + ~a&b&~d);
-    wire widthSelect = FunSel[4];
-    wire C_out;
-
-    // wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
-    // wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
-
-    assign C_out = 1'b0; // No carry out for 32-bit operations
-    assign {ALUOut} = (FunSel == 4'b0000) ? A : 
-                 (FunSel == 4'b0001) ? B :
-                 (FunSel == 4'b0010) ? ~A :
-                 (FunSel == 4'b0011) ? ~B :
-                 (FunSel == 4'b0100) ? A + B :
-                 (FunSel == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
-                 (FunSel == 4'b0110) ? A - B :
-                 (FunSel == 4'b0111) ? A & B :
-                 (FunSel == 4'b1000) ? A | B :
-                 (FunSel == 4'b1001) ? A ^ B :
-                 (FunSel == 4'b1010) ? ~(A & B) :
-                 (FunSel == 4'b1011) ? {A[31:1], 1'b0} : // LSL
-                 (FunSel == 4'b1100) ? {1'b0, A[31:1]} : // LSR
-                 (FunSel == 4'b1101) ? {A[31], A[31:1]} : // ASR
-                 (FunSel == 4'b1110) ? {FlagsOut[2], A[31:1]} : // CSL
-                 {A[31], A[31:1]}; // CSR
-
-    always @(posedge Clock) begin
-        if (Z_en)
-            FlagsOut[3] <= (ALUOut == 0);
-        if (C_en)
-            FlagsOut[2] <= widthSelect ? C_out : (A[26] ^ B[26] ^ ALUOut[26]);
-        if (N_en)
-            FlagsOut[1] <= ALUOut[31];
-        if (O_en)
-            FlagsOut[0] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
-    end
-
-endmodule
