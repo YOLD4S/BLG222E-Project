@@ -83,6 +83,7 @@ module halfALU (
 
     assign C_out = (FunSel[3:0] == 4'b0100 || FunSel[3:0] == 4'b0101 || FunSel[3:0] == 4'b0110) ? (A + B + C_in > 16'hFFFF) : 
     (FunSel[3:0] == 4'b1011 || FunSel[3:0] == 4'b1110) ? ({A, C_in} > 16'hFFFF) : 1'b0; // Carry out condition
+    assign R_out = A[0]; // Right shift out
 
     always @(posedge Clock) begin
         case (FunSel)
@@ -98,10 +99,10 @@ module halfALU (
             4'b1001: ALUOut <= A ^ B;
             4'b1010: ALUOut <= ~(A & B);
             4'b1011: ALUOut <= {A, C_in}; // LSL A
-            4'b1100: {ALUOut, R_out} <= {L_in, A}; // LSR A
+            4'b1100: ALUOut <= {L_in, A[15:1]}; // LSR A
             4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
             4'b1110: ALUOut <= {A, C_in}; // CSL A
-            4'b1111: {ALUOut, R_out} <= {L_in, A}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
+            4'b1111: ALUOut <= {L_in, A[15:1]}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
         endcase
     end
 endmodule
