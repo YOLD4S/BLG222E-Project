@@ -14,9 +14,9 @@ module ArithmeticLogicUnit (
 
     wire Z_en = WF;
     wire C_en = WF & (~f[3]&f[2]&~f[1] | f[2]&~f[0] | f[3]&f[1]&f[0]);
-    wire N_en = WF & ~(f[0]&f[1]&~f[2]&f[3]);
-    wire O_en = WF & (~f[0]&f[1]&~f[2] + ~f[0]&f[1]&~f[3]);
-    
+    wire N_en = WF & ~(f[0]&~f[1]&f[2]&f[3]);
+    wire O_en = WF & (~f[3]&f[2]&~f[1] + ~f[3]&f[2]&~f[0]); // a'bc' + a'bd'
+
     wire C;
 
     assign {C, ALUOut} = (f == 4'b0000) ? {1'b0, A} : 
