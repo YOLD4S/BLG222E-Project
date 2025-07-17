@@ -68,7 +68,7 @@ module halfALU (
     input wire [15:0] B,//
     input wire [3:0] FunSel, 
     input wire Clock,//
-    output reg [15:0] ALUOut,
+    output wire [15:0] ALUOut,
     output wire C_out,//
     output wire R_out,//
     output wire [3:0] FlagsOut // Z, C, N, O
@@ -85,26 +85,43 @@ module halfALU (
     (FunSel[3:0] == 4'b1011 || FunSel[3:0] == 4'b1110) ? ({A, C_in} > 16'hFFFF) : 1'b0; // Carry out condition
     assign R_out = A[0]; // Right shift out
 
-    always @(posedge Clock) begin
-        case (FunSel)
-            4'b0000: ALUOut <= A;
-            4'b0001: ALUOut <= B;
-            4'b0010: ALUOut <= ~A;
-            4'b0011: ALUOut <= ~B;
-            4'b0100: ALUOut <= A + B + C_in;     //    A + B
-            4'b0101: ALUOut <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
-            4'b0110: ALUOut <= A - B;
-            4'b0111: ALUOut <= A & B;
-            4'b1000: ALUOut <= A | B;
-            4'b1001: ALUOut <= A ^ B;
-            4'b1010: ALUOut <= ~(A & B);
-            4'b1011: ALUOut <= {A, C_in}; // LSL A
-            4'b1100: ALUOut <= {L_in, A[15:1]}; // LSR A
-            4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
-            4'b1110: ALUOut <= {A, C_in}; // CSL A
-            4'b1111: ALUOut <= {L_in, A[15:1]}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
-        endcase
-    end
+    assign ALUOut = (FunSel == 4'b0000) ? A : 
+                 (FunSel == 4'b0001) ? B : 
+                 (FunSel == 4'b0010) ? ~A : 
+                 (FunSel == 4'b0011) ? ~B : 
+                 (FunSel == 4'b0100) ? A + B + C_in : 
+                 (FunSel == 4'b0101) ? A + B + C_in : // A + B + C
+                 (FunSel == 4'b0110) ? A - B : 
+                 (FunSel == 4'b0111) ? A & B : 
+                 (FunSel == 4'b1000) ? A | B : 
+                 (FunSel == 4'b1001) ? A ^ B : 
+                 (FunSel == 4'b1010) ? ~(A & B) : 
+                 (FunSel == 4'b1011) ? {L_in, A[15:1]} : // LSL
+                 (FunSel == 4'b1100) ? {A[15], A[15:1]} : // LSR
+                 (FunSel == 4'b1101) ? {A[15], A[15:1]} : // ASR
+                 (FunSel == 4'b1110) ? {L_in, A[15:1]} : // CSL
+                 {A[15], A[15:1]}; // CSR
+
+    // always @(posedge Clock) begin
+    //     case (FunSel)
+    //         4'b0000: ALUOut <= A;
+    //         4'b0001: ALUOut <= B;
+    //         4'b0010: ALUOut <= ~A;
+    //         4'b0011: ALUOut <= ~B;
+    //         4'b0100: ALUOut <= A + B + C_in;     //    A + B
+    //         4'b0101: ALUOut <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
+    //         4'b0110: ALUOut <= A - B;
+    //         4'b0111: ALUOut <= A & B;
+    //         4'b1000: ALUOut <= A | B;
+    //         4'b1001: ALUOut <= A ^ B;
+    //         4'b1010: ALUOut <= ~(A & B);
+    //         4'b1011: ALUOut <= {A, C_in}; // LSL A
+    //         4'b1100: ALUOut <= {L_in, A[15:1]}; // LSR A
+    //         4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
+    //         4'b1110: ALUOut <= {A, C_in}; // CSL A
+    //         4'b1111: ALUOut <= {L_in, A[15:1]}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
+    //     endcase
+    // end
 endmodule
 
 
