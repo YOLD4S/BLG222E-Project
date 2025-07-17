@@ -118,12 +118,12 @@
 `timescale 1ns / 1ps
 
 module ArithmeticLogicUnit (
-    input wire [32:0] A,
-    input wire [32:0] B,
+    input wire [31:0] A,
+    input wire [31:0] B,
     input wire [4:0] FunSel,
     input wire WF,
     input wire Clock,
-    output wire [32:0] ALUOut,
+    output wire [31:0] ALUOut,
     output reg [3:0] FlagsOut // Z, C, N, O
 );
     assign {Z,C,N,O} = FlagsOut;
@@ -156,16 +156,14 @@ module ArithmeticLogicUnit (
                  {A[31], A[31:1]}; // CSR
 
     always @(posedge Clock) begin
-        if (WF) begin
-            if (Z_en)
-                FlagsOut[3] <= (ALUOut == 0);
-            if (C_en)
-                FlagsOut[2] <= widthSelect ? C_out : C_carrier;
-            if (N_en)
-                FlagsOut[1] <= ALUOut[31];
-            if (O_en)
-                FlagsOut[0] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
-        end
+        if (Z_en)
+            FlagsOut[3] <= (ALUOut == 0);
+        if (C_en)
+            FlagsOut[2] <= widthSelect ? C_out : C_carrier;
+        if (N_en)
+            FlagsOut[1] <= ALUOut[31];
+        if (O_en)
+            FlagsOut[0] <= FunSel[1] ? ((A[31] != B[31]) && (B[31] == ALUOut[31])) : ((A[31] == B[31]) && (ALUOut[31] != A[31]));
     end
 
 endmodule
