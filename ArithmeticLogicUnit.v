@@ -151,7 +151,7 @@ module ArithmeticLogicUnit (
                  (FunSel == 4'b1011) ? {A[31:1], 1'b0} : // LSL
                  (FunSel == 4'b1100) ? {1'b0, A[31:1]} : // LSR
                  (FunSel == 4'b1101) ? {A[31], A[31:1]} : // ASR
-                 (FunSel == 4'b1110) ? {C, A[31:1]} : // CSL
+                 (FunSel == 4'b1110) ? {FlagsOut[2], A[31:1]} : // CSL
                  {A[31], A[31:1]}; // CSR
 
     always @(posedge Clock) begin
