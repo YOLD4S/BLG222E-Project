@@ -2,7 +2,7 @@
 
 module AddressRegisterFile(
     input wire Clock,
-    input wire [15:0] I, // Bu kisim odev dosyasinda ve simulasyonda 32 bit olarak tanimlanmis
+    input wire [31:0] I, // Bu kisim odev dosyasinda ve simulasyonda 32 bit olarak tanimlanmis. Mantiken 16 olmasi lazim ama
     input wire [2:0] RegSel,
     input wire [1:0] FunSel,
     input wire [1:0] OutCSel,
@@ -17,9 +17,9 @@ module AddressRegisterFile(
     assign SP_E = RegSel[1];
     assign AR_E = RegSel[0];
 
-    Register16bit PC(.I(I), .E(PC_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_PC));
-    Register16bit AR(.I(I), .E(AR_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_AR));
-    Register16bit SP(.I(I), .E(SP_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_SP));
+    Register16bit PC(.I(I[15:0]), .E(PC_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_PC));
+    Register16bit AR(.I(I[15:0]), .E(AR_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_AR));
+    Register16bit SP(.I(I[15:0]), .E(SP_E), .FunSel(FunSel), .Clock(Clock), .Q(Q_SP));
 
     assign OutC = (OutCSel == 2'b00) ? PC.Q :
                   (OutCSel == 2'b01) ? SP.Q : AR.Q;
