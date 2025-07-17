@@ -22,7 +22,7 @@ module ArithmeticLogicUnit (
     wire widthSelect = FunSel[4];
     wire [3:0] rightFunSel = (FunSel == 5'b11101) ? 4'b1100 : FunSel[3:0];
 
-    assign C_in = (~a&d | c&~d) ? FlagsOut[2] : 1'b0;
+    assign C_in = (~a&d | c&~d) ? FlagsOut[1] : 1'b0;
     assign L_in = d ? FlagsOut[1] : 1'b0;
 
     halfALU leftALU (
