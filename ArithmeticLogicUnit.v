@@ -19,28 +19,32 @@ module ArithmeticLogicUnit (
 
     wire C;
 
-    assign {C, ALUOut} = (f == 4'b0000) ? {1'b0, A} : 
-                 (f == 4'b0001) ? {1'b0, B} :
-                 (f == 4'b0010) ? {1'b0, ~A} :
-                 (f == 4'b0011) ? {1'b0, ~B} :
-                 (f == 4'b0100) ? A + B :
-                 (f == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
-                 (f == 4'b0110) ? A - B :
-                 (f == 4'b0111) ? {1'b0, A & B} :
-                 (f == 4'b1000) ? {1'b0, A | B} :
-                 (f == 4'b1001) ? {1'b0, A ^ B} :
-                 (f == 4'b1010) ? {1'b0, ~(A & B)} :
-                 (f == 4'b1011) ? {A[31:0], 1'b0} : // LSL
-                 (f == 4'b1100) ? {A[0], 1'b0, A[31:1]} : // LSR
-                 (f == 4'b1101) ? {1'b0, A[31], A[31:1]} : // ASR
-                 (f == 4'b1110) ? {A[31:0], FlagsOut[2]} : // CSL
-                 {A[0], FlagsOut[2], A[31:1]}; // CSR
+    wire [31:0] X, Y;
+    assign X = widthSelect ? {16{A[15]}, A[15:0]} : A;
+    assign Y = widthSelect ? {16{B[15]}, B[15:0]} : B;
+
+    assign {C, ALUOut} = (f == 4'b0000) ? {1'b0, X} : 
+                         (f == 4'b0001) ? {1'b0, Y} :
+                         (f == 4'b0010) ? {1'b0, ~X} :
+                         (f == 4'b0011) ? {1'b0, ~Y} :
+                         (f == 4'b0100) ? X + Y :                   // widthSelect ? A + B : {(A[15:0] + B[15:0] > 16'hFFFF), A + B} :
+                         (f == 4'b0101) ? X + Y + FlagsOut[2] :     // widthSelect ? A + B + FlagsOut[2] : {(A[15:0] + B[15:0] + FlagsOut[2] > 16'hFFFF), A + B} :
+                         (f == 4'b0110) ? X - Y :
+                         (f == 4'b0111) ? {1'b0, X & Y} :
+                         (f == 4'b1000) ? {1'b0, X | Y} :
+                         (f == 4'b1001) ? {1'b0, X ^ Y} :
+                         (f == 4'b1010) ? {1'b0, ~(X & Y)} :
+                         (f == 4'b1011) ? {X[31:0], 1'b0} : // LSL
+                         (f == 4'b1100) ? {X[0], 1'b0, X[31:1]} : // LSR
+                         (f == 4'b1101) ? {1'b0, X[31], X[31:1]} : // ASR
+                         (f == 4'b1110) ? {X[31:0], FlagsOut[2]} : // CSL
+                         {X[0], FlagsOut[2], X[31:1]}; // CSR
 
     always @(posedge Clock) begin
         if (Z_en)
             FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
-            FlagsOut[2] <= widthSelect ? C : (A[26] ^ B[26] ^ ALUOut[26]);
+            FlagsOut[2] <= C;
         if (N_en)
             FlagsOut[1] <= ALUOut[31];
         if (O_en)
