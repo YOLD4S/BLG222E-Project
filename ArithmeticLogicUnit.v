@@ -124,9 +124,8 @@ module ArithmeticLogicUnit (
     input wire WF,
     input wire Clock,
     output wire [31:0] ALUOut,
-    output reg [3:0] FlagsOut // Z, C, N, O
+    output reg [3:0] FlagsOut // {Z, C, N, O}
 );
-    assign {Z,C,N,O} = FlagsOut;
     wire a,b,c,d;
     assign {a,b,c,d} = FunSel[3:0];
     wire Z_en = WF;
@@ -135,15 +134,15 @@ module ArithmeticLogicUnit (
     wire O_en = WF & (~a&b&~c + ~a&b&~d);
     wire widthSelect = FunSel[4];
 
-    wire real_A = widthSelect ? A : {{16{A[31]}}, A[15:0]};
-    wire real_B = widthSelect ? B : {{16{B[31]}}, B[15:0]};
+    wire real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
+    wire real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
 
     assign ALUOut = (FunSel == 4'b0000) ? A : 
                  (FunSel == 4'b0001) ? B :
                  (FunSel == 4'b0010) ? ~A :
                  (FunSel == 4'b0011) ? ~B :
                  (FunSel == 4'b0100) ? A + B :
-                 (FunSel == 4'b0101) ? A + B + C : // A + B + C
+                 (FunSel == 4'b0101) ? A + B + FlagsOut[2] : // A + B + C
                  (FunSel == 4'b0110) ? A - B :
                  (FunSel == 4'b0111) ? A & B :
                  (FunSel == 4'b1000) ? A | B :
