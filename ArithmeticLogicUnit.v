@@ -20,8 +20,8 @@ module ArithmeticLogicUnit (
     wire C;
 
     wire [31:0] X, Y;
-    assign X = widthSelect ? {{16{A[15]}}, A[15:0]} : A;
-    assign Y = widthSelect ? {{16{B[15]}}, B[15:0]} : B;
+    assign X = widthSelect ? A : {{16{A[15]}}, A[15:0]};
+    assign Y = widthSelect ? B : {{16{B[15]}}, B[15:0]};
 
     assign {C, ALUOut} = (f == 4'b0000) ? {1'b0, X} : 
                          (f == 4'b0001) ? {1'b0, Y} :
