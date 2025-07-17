@@ -80,6 +80,10 @@ module halfALU (
     assign FlagsOut[2] = (ALUOut[15] ==   1); // N flag
     assign FlagsOut[3] = FunSel[1] ? (A[15] != B[15]) && (ALUOut[15] != A[15]) : ((A[15] == B[15]) && (ALUOut[15] != A[15])); // O flag                                                              
 
+
+    assign C_out = (FunSel[3:0] == 4'b0100 || FunSel[3:0] == 4'b0101 || FunSel[3:0] == 4'b0110) ? (A + B + C_in > 16'hFFFF) : 
+    (FunSel[3:0] == 4'b1011 || FunSel[3:0] == 4'b1110) ? ({A, C_in} > 16'hFFFF) : 1'b0; // Carry out condition
+
     always @(posedge Clock) begin
         case (FunSel)
             4'b0000: ALUOut <= A;
@@ -89,10 +93,10 @@ module halfALU (
             4'b0100: {C_out, ALUOut} <= A + B + C_in;     //    A + B
             4'b0101: {C_out, ALUOut} <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
             4'b0110: {C_out, ALUOut} <= A - B;
-            4'b0111: {C_out, ALUOut} <= A & B;
-            4'b1000: {C_out, ALUOut} <= A | B;
-            4'b1001: {C_out, ALUOut} <= A ^ B;
-            4'b1010: {C_out, ALUOut} <= ~(A & B);
+            4'b0111: ALUOut <= A & B;
+            4'b1000: ALUOut <= A | B;
+            4'b1001: ALUOut <= A ^ B;
+            4'b1010: ALUOut <= ~(A & B);
             4'b1011: {C_out, ALUOut} <= {A, C_in}; // LSL A
             4'b1100: {ALUOut, R_out} <= {L_in, A}; // LSR A
             4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
