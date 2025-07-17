@@ -40,7 +40,7 @@ module ArithmeticLogicUnit (
         if (Z_en)
             FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
-            FlagsOut[2] <= widthSelect ? (A+B > 32'hFFFFFFFF) : (A[26] ^ B[26] ^ ALUOut[26]);
+            FlagsOut[2] <= widthSelect ? C : (A[26] ^ B[26] ^ ALUOut[26]);
         if (N_en)
             FlagsOut[1] <= ALUOut[31];
         if (O_en)
