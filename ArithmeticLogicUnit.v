@@ -13,9 +13,9 @@ module ArithmeticLogicUnit (
     wire [3:0] f = FunSel[3:0];
 
     wire Z_en = WF;
-    wire C_en = WF //& (~f[0]&f[1] | f[1]&~f[3] | f[1]&f[2]);
+    wire C_en = WF; //& (~f[0]&f[1] | f[1]&~f[3] | f[1]&f[2]);
     wire N_en = WF & ~(f[0]&f[1]&~f[2]&f[3]);
-    wire O_en = WF //& (~f[0]&f[1]&~f[2] + ~f[0]&f[1]&~f[3]);
+    wire O_en = WF; //& (~f[0]&f[1]&~f[2] + ~f[0]&f[1]&~f[3]);
     
     wire C_out;
 
