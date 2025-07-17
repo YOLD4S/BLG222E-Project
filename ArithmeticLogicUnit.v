@@ -133,9 +133,10 @@ module ArithmeticLogicUnit (
     wire N_en = WF & ~(a&b&~c&d);
     wire O_en = WF & (~a&b&~c + ~a&b&~d);
     wire widthSelect = FunSel[4];
+    wire C_out;
 
-    wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
-    wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
+    // wire [31:0] real_A = widthSelect ? A : {{16{A[15]}}, A[15:0]};
+    // wire [31:0] real_B = widthSelect ? B : {{16{B[15]}}, B[15:0]};
 
     assign {C_out, ALUOut} = (FunSel == 4'b0000) ? A : 
                  (FunSel == 4'b0001) ? B :
