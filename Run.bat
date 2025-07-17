@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source Vivado environment (Linux path!)
-source /opt/Xilinx/Vivado/2017.4/settings64.sh
+source /home/beeFendy/Xilinx/2025.1/Vivado/settings64.sh
 
 # Create simulation folder
 folder="Simulation_Files"
