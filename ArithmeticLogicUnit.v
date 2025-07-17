@@ -27,8 +27,8 @@ module ArithmeticLogicUnit (
 
     halfALU leftALU (
         .C_in(C_carrier),
-        .A(A[15:0]),
-        .B(B[15:0]),
+        .A(A[31:16]),
+        .B(B[31:16]),
         .FunSel(FunSel[3:0]),
         .ALUOut(ALUOut[31:16]),
         .FlagsOut(flags_L),
@@ -38,8 +38,8 @@ module ArithmeticLogicUnit (
     );
     halfALU rightALU (
         .C_in(C_in),
-        .A(A[31:16]),
-        .B(B[31:16]),
+        .A(A[15:0]),
+        .B(B[15:0]),
         .FunSel(rightFunSel),
         .ALUOut(ALUOut[15:00]),
         .FlagsOut(flags_R),

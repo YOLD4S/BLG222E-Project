@@ -1,4 +1,4 @@
-call C:\Xilinx\Vivado\2017.4\settings64.bat
+call "A:\Xilinx\2025.1\Vivado\settings64.bat"
 
 set folder=Simulation_Files
 mkdir %folder%
