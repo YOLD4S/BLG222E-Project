@@ -155,8 +155,8 @@ module ArithmeticLogicUnit (
                  (FunSel == 4'b1110) ? {C, A[31:1]} : // CSL
                  {A[31], A[31:1]}; // CSR
 
-    always @(posedge Clock) begin
-        if (WF)
+    always @(posedge *) begin
+        if (Z_en)
             FlagsOut[3] <= (ALUOut == 0);
         if (C_en)
             FlagsOut[2] <= widthSelect ? C_out : C_carrier;
