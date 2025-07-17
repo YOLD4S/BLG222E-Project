@@ -90,17 +90,17 @@ module halfALU (
             4'b0001: ALUOut <= B;
             4'b0010: ALUOut <= ~A;
             4'b0011: ALUOut <= ~B;
-            4'b0100: {C_out, ALUOut} <= A + B + C_in;     //    A + B
-            4'b0101: {C_out, ALUOut} <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
-            4'b0110: {C_out, ALUOut} <= A - B;
+            4'b0100: ALUOut <= A + B + C_in;     //    A + B
+            4'b0101: ALUOut <= A + B + C_in; //A + B + C  // ustteki ile ayni duruyor. Gerekli durumda sagdaki yarim ALUnin C_in girisine gerekli inputu Ana ALU icerisinde verecegeim
+            4'b0110: ALUOut <= A - B;
             4'b0111: ALUOut <= A & B;
             4'b1000: ALUOut <= A | B;
             4'b1001: ALUOut <= A ^ B;
             4'b1010: ALUOut <= ~(A & B);
-            4'b1011: {C_out, ALUOut} <= {A, C_in}; // LSL A
+            4'b1011: ALUOut <= {A, C_in}; // LSL A
             4'b1100: {ALUOut, R_out} <= {L_in, A}; // LSR A
             4'b1101: ALUOut <= {A[15], A[15:1]}; // ASR A        ///.     Needs to be solved
-            4'b1110: {C_out, ALUOut} <= {A, C_in}; // CSL A
+            4'b1110: ALUOut <= {A, C_in}; // CSL A
             4'b1111: {ALUOut, R_out} <= {L_in, A}; // CSR A.      // Combinatorial logic for L_in should be handled outside this module
         endcase
     end
