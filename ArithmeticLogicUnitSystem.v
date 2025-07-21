@@ -10,7 +10,7 @@ module ArithmeticLogicUnitSystem (
     input wire [4:0] ALU_FunSel
 );
     wire [31:0] MuxAOut, MuxBOut, OutA, OutB, MuxDOut, DROut;
-    wire [15:0] OutC, OutD, ALUOut, IROut;
+    wire [15:0] OutC, Address, ALUOut, IROut;
     wire [7:0] MuxCOut, MemOut;
     wire [3:0] ALU_FlagsOut;
 
@@ -40,7 +40,7 @@ module ArithmeticLogicUnitSystem (
         .OutCSel(ARF_OutCSel),
         .OutDSel(ARF_OutDSel),
         .OutC(OutC),
-        .OutD(OutD)
+        .OutD(Address)
     );
 
     DataRegister DR (
@@ -60,7 +60,7 @@ module ArithmeticLogicUnitSystem (
     );
 
     Memory MEM (
-        .Address(OutD),
+        .Address(Address),
         .Data(MuxCOut),
         .WR(Mem_WR),
         .CS(Mem_CS),
