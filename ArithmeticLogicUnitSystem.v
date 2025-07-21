@@ -9,7 +9,7 @@ module ArithmeticLogicUnitSystem (
     input wire [3:0] RF_RegSel, RF_ScrSel,
     input wire [4:0] ALU_FunSel
 );
-    wire [31:0] MuxAOut, MuxBOut, RF_outA, RF_outB, MuxDOut, DROut;
+    wire [31:0] MuxAOut, MuxBOut, OutA, OutB, MuxDOut, DROut;
     wire [15:0] ARF_outC, ARF_outD, ALU_out, IROut;
     wire [7:0] MuxCOut, MemOut;
     wire [3:0] ALU_FlagsOut;
@@ -18,13 +18,13 @@ module ArithmeticLogicUnitSystem (
         .OutASel(RF_OutASel), .OutBSel(RF_OutBSel), 
         .FunSel(RF_FunSel), .RegSel(RF_RegSel),
         .ScrSel(RF_ScrSel), .Clock(Clock),
-        .OutA(RF_outA), .OutB(RF_outB),
+        .OutA(OutA), .OutB(OutB),
         .I(MuxAOut)
     );
 
     ArithmeticLogicUnit ALU (
         .A(MuxDOut),
-        .B(RF_outB),
+        .B(OutB),
         .FunSel(ALU_FunSel),
         .WF(ALU_WF),
         .Clock(Clock),
@@ -84,7 +84,7 @@ module ArithmeticLogicUnitSystem (
     );
 
     Mux2to1_32bit MuxD (
-        .in0(RF_outA), .in1({16'b0, ARF_outC}),
+        .in0(OutA), .in1({16'b0, ARF_outC}),
         .sel(MuxDSel), .out(MuxDOut)
     );
 
