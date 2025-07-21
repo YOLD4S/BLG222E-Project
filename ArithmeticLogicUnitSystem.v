@@ -2,7 +2,7 @@
 
 module ArithmeticLogicUnitSystem (
     input wire ALU_WF, IR_Write, Mem_WR, Mem_CS, IR_LH,
-    input wire MuxDSel, Clock, DR_E
+    input wire MuxDSel, Clock, DR_E,
     input wire [1:0] MuxCSel, ARF_OutCSel, ARF_OutDSel,ARF_FunSel,
     input wire [1:0] MuxASel, MuxBSel, DR_FunSel,
     input wire [2:0] RF_OutASel, RF_OutBSel, RF_FunSel, ARF_RegSel,
