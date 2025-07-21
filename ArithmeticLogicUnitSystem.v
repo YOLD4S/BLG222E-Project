@@ -10,7 +10,7 @@ module ArithmeticLogicUnitSystem (
     input wire [4:0] ALU_FunSel
 );
     wire [31:0] MuxAOut, MuxBOut, OutA, OutB, MuxDOut, DROut;
-    wire [15:0] ARF_outC, ARF_outD, ALU_out, IROut;
+    wire [15:0] OutC, OutD, ALUOut, IROut;
     wire [7:0] MuxCOut, MemOut;
     wire [3:0] ALU_FlagsOut;
 
@@ -28,7 +28,7 @@ module ArithmeticLogicUnitSystem (
         .FunSel(ALU_FunSel),
         .WF(ALU_WF),
         .Clock(Clock),
-        .ALUOut(ALU_out),
+        .ALUOut(ALUOut),
         .FlagsOut(ALU_FlagsOut)
     );
 
@@ -39,8 +39,8 @@ module ArithmeticLogicUnitSystem (
         .FunSel(ARF_FunSel),
         .OutCSel(ARF_OutCSel),
         .OutDSel(ARF_OutDSel),
-        .OutC(ARF_outC),
-        .OutD(ARF_outD)
+        .OutC(OutC),
+        .OutD(OutD)
     );
 
     DataRegister DR (
@@ -59,8 +59,8 @@ module ArithmeticLogicUnitSystem (
         .IROut(IROut)
     );
 
-    Memory Mem (
-        .Address(ARF_outD),
+    Memory MEM (
+        .Address(OutD),
         .Data(MuxCOut),
         .WR(Mem_WR),
         .CS(Mem_CS),
@@ -69,22 +69,22 @@ module ArithmeticLogicUnitSystem (
     );
 
     Mux4to1_32bit MuxA (
-        .in0(ALU_out), .in1({16'b0, ARF_outC}), .in2(DROut), .in3(IROut[7:0]),
+        .in0(ALUOut), .in1({16'b0, OutC}), .in2(DROut), .in3(IROut[7:0]),
         .sel(MuxASel), .out(MuxAOut)
     );
 
     Mux4to1_32bit MuxB (
-        .in0(ALU_out), .in1({16'b0, ARF_outC}), .in2(DROut), .in3(IROut[7:0]),
+        .in0(ALUOut), .in1({16'b0, OutC}), .in2(DROut), .in3(IROut[7:0]),
         .sel(MuxBSel), .out(MuxBOut)
     );
 
     Mux4to1_8bit MuxC (
-        .in0(ALU_out[7:0]), .in1(ALU_out[15:8]), .in2(ALU_out[23:16]), .in3(ALU_out[31:24]),
+        .in0(ALUOut[7:0]), .in1(ALUOut[15:8]), .in2(ALUOut[23:16]), .in3(ALUOut[31:24]),
         .sel(MuxCSel), .out(MuxCOut)
     );
 
     Mux2to1_32bit MuxD (
-        .in0(OutA), .in1({16'b0, ARF_outC}),
+        .in0(OutA), .in1({16'b0, OutC}),
         .sel(MuxDSel), .out(MuxDOut)
     );
 
