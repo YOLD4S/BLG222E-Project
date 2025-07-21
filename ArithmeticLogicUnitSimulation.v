@@ -66,14 +66,14 @@ module ArithmeticLogicUnitSimulation();
 
         //Test 4
         test_no = 4;
-        A = 32'h12345678;
-        B = 32'h02045130;
-        ALU.FlagsOut = 4'b1111;
-        FunSel =5'b10100;
+        A = 32'h77777777;
+        B = 32'h88888887;
+        ALU.FlagsOut = 4'b0000;
+        FunSel =5'b10101;
         WF =1;
         #5
         clk.Clock();
-        F.CheckValues(ALUOut,32'h1438A7A8, test_no, "ALUOut");
+        F.CheckValues(ALUOut,32'hFFFFFFFE, test_no, "ALUOut");
         F.CheckValues(Z,0, test_no, "Z");
         F.CheckValues(C,0, test_no, "C");
         F.CheckValues(N,0, test_no, "N");
