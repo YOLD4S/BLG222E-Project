@@ -32,7 +32,7 @@ module ArithmeticLogicUnitSystem (
         .FlagsOut(ALU_FlagsOut)
     );
 
-    ArithmeticRegisterFile ARF (
+    AddressRegisterFile ARF (
         .Clock(Clock),
         .I(MuxBOut),
         .RegSel(ARF_RegSel),
