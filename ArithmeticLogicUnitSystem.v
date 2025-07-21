@@ -9,8 +9,8 @@ module ArithmeticLogicUnitSystem (
     input wire [3:0] RF_RegSel, RF_ScrSel,
     input wire [4:0] ALU_FunSel
 );
-    wire [31:0] MuxAOut, MuxBOut, OutA, OutB, MuxDOut, DROut;
-    wire [15:0] OutC, Address, ALUOut, IROut;
+    wire [31:0] MuxAOut, MuxBOut, OutA, OutB, MuxDOut, DROut, ALUOut;
+    wire [15:0] OutC, Address, IROut;
     wire [7:0] MuxCOut, MemOut;
     wire [3:0] ALU_FlagsOut;
 
