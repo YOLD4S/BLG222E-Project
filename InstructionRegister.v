@@ -8,14 +8,14 @@ module InstructionRegister (
     output reg [15:0] IROut
 );
 
-always @(posedge Clock) begin
+  always @(posedge Clock) begin
     if (Write) begin
-        if (LH) begin
-            IROut <= {I, IROut[7:0]};
-        end else begin
-            IROut <= {IROut[15:8], I};
-        end
+      if (LH) begin
+        IROut <= {I, IROut[7:0]};
+      end else begin
+        IROut <= {IROut[15:8], I};
+      end
     end
-end
+  end
 
 endmodule

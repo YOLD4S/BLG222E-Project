@@ -17,9 +17,10 @@ always @(posedge Clock) begin
             3'b011: Q <= 32'b0;                         // Clear
             3'b100: Q <= {24'b0, I[7:0]};               // Load lower 8 bits of I
             3'b101: Q <= {16'b0, I[15:0]};              // Load lower 16 bits of I
-            3'b110: Q <= {Q[23:0], I[7:0]};              // Q (31-8) ← Q (23-0) (8-bit Left Shift)
-            3'b111: Q <= {{16{I[15]}}, I[15:0]};          // Sign extend (16bit)
+            3'b110: Q <= {Q[23:0], I[7:0]};             // Q (31-8) ← Q (23-0) (8-bit Left Shift)
+            3'b111: Q <= {{16{I[15]}}, I[15:0]};        // Sign extend (16bit)
         endcase
     end
 end
+
 endmodule

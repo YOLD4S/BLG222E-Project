@@ -35,32 +35,8 @@ module RegisterFile(
     Register32bit S2(.I(I), .E(ES2), .FunSel(FunSel), .Clock(Clock), .Q(Q_S2));
     Register32bit S3(.I(I), .E(ES3), .FunSel(FunSel), .Clock(Clock), .Q(Q_S3));
     Register32bit S4(.I(I), .E(ES4), .FunSel(FunSel), .Clock(Clock), .Q(Q_S4));
-
-
-
-    // Buradan tam emin degiliz @(posedge Clock) da olabilir dogrusu. Deneyip goruruz burayi
-    // always @(*) begin
-    //     case(OutASel)
-    //         3'b000: OutA = Q_R1;
-    //         3'b001: OutA = Q_R2;
-    //         3'b010: OutA = Q_R3;
-    //         3'b011: OutA = Q_R4;
-    //         3'b100: OutA = Q_S1;
-    //         3'b101: OutA = Q_S2;
-    //         3'b110: OutA = Q_S3;
-    //         3'b111: OutA = Q_S4;
-    //     endcase
-    //     case(OutBSel)
-    //         3'b000: OutB = Q_R1;
-    //         3'b001: OutB = Q_R2;
-    //         3'b010: OutB = Q_R3;
-    //         3'b011: OutB = Q_R4;
-    //         3'b100: OutB = Q_S1;
-    //         3'b101: OutB = Q_S2;
-    //         3'b110: OutB = Q_S3;
-    //         3'b111: OutB = Q_S4;
-    //     endcase
-    // end
+    
+    // Output selection for OutA and OutB
     assign OutA = (OutASel == 3'b000) ? Q_R1 :
                   (OutASel == 3'b001) ? Q_R2 :
                   (OutASel == 3'b010) ? Q_R3 :

@@ -19,5 +19,4 @@ always @(posedge Clock) begin
     end
 end
 
-
 endmodule
