@@ -51,4 +51,5 @@ module RegisterFile(
                   (OutBSel == 3'b100) ? Q_S1 :
                   (OutBSel == 3'b101) ? Q_S2 :
                   (OutBSel == 3'b110) ? Q_S3 : Q_S4;
+
 endmodule
