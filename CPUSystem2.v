@@ -5,9 +5,9 @@ module CPUSystem (
     input wire Reset,
     input reg[11:0] T
 );
-    wire ALU_WF;
+    wire ALU_WF;                
     wire IR_Write;              /////
-    wire Mem_WR;
+    wire Mem_WR;                /////
     wire Mem_CS;                /////
     wire IR_LH;                 /////
     wire MuxDSel;
@@ -35,7 +35,7 @@ module CPUSystem (
     wire [2:0] SrcReg2;          /////
     wire [1:0] RegSel;           /////
     wire [63:0] D;
-    6to64Decoder decoder (.in(Opcode), .out(D));
+    SixTo64Decoder deco (.in(Opcode), .out(D));
 
     wire a,b,c,d,e, rrr;
     assign a = Opcode[5];
@@ -57,7 +57,7 @@ module CPUSystem (
     assign Address = IROut[7:0];   //????
 
     assign Mem_CS = 0;
-    assign Mem_WR = ;
+    assign Mem_WR = D4 || D6 || (D7 && ~T4) || (D8 && T3) || D29 || ((D32 || D36) && ~T2)
 
 
 
@@ -110,7 +110,7 @@ module CPUSystem (
 endmodule
 
 
-module 6to64Decoder (
+module SixTo64Decoder (
     input wire [5:0] in,
     output wire [63:0] out
     );
