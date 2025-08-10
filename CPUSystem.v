@@ -391,7 +391,7 @@ module CPUSystem (
                         MuxDSel = 1;            // OutC
                         ALU_FunSel = 5'b00000;  // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;        // LSB
+                        MuxCSel = 2'b01;        // LSB
 
                         ARF_OutDSel = 2'b01;    // SP
                         Mem_CS = 0;
@@ -405,7 +405,7 @@ module CPUSystem (
                         MuxDSel = 1;            // OutC
                         ALU_FunSel = 5'b00000;  // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;        // MSB
+                        MuxCSel = 2'b00;        // MSB
 
                         ARF_OutDSel = 2'b01;    // SP
                         Mem_CS = 0;
@@ -1306,14 +1306,14 @@ module CPUSystem (
                             MuxDSel = 0;
                             ALU_FunSel = 5'b10000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b11;
+                            MuxCSel = 2'b00;
                         end
                         else begin  // ARF registers
                             ARF_RegSel = SrcReg1[1:0];
                             MuxDSel = 1;
                             ALU_FunSel = 5'b00000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b01;
+                            MuxCSel = 2'b00;
                         end
 
                         ARF_OutDSel = 2'b10; // AR
@@ -1328,7 +1328,7 @@ module CPUSystem (
                             MuxDSel = 0;
                             ALU_FunSel = 5'b10000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b10;
+                            MuxCSel = 2'b01;
                             ARF_RegSel = 3'b001;
                             ARF_FunSel = 2'b01;   // increment AR
                         end
@@ -1337,7 +1337,7 @@ module CPUSystem (
                             MuxDSel = 1;
                             ALU_FunSel = 5'b00000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b00;
+                            MuxCSel = 2'b01;
                             ResetT();   // 2 cycle is enough for arf registers (16-bit)
                         end
 
@@ -1350,7 +1350,7 @@ module CPUSystem (
                         MuxDSel = 0;
                         ALU_FunSel = 5'b10000;
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;
+                        MuxCSel = 2'b10;
 
                         ARF_RegSel = 3'b001;
                         ARF_FunSel = 2'b01;   // increment AR
@@ -1363,7 +1363,7 @@ module CPUSystem (
                         MuxDSel = 0;
                         ALU_FunSel = 5'b10000;
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;
+                        MuxCSel = 2'b11;
                         ARF_OutDSel = 2'b10; // AR
                         Mem_CS = 0;
                         Mem_WR = 1;   // write active
