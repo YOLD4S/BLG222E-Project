@@ -8,7 +8,7 @@ module CPUSystem (
     wire ALU_WF;
     wire IR_Write;              /////
     wire Mem_WR;
-    wire Mem_CS;
+    wire Mem_CS;                /////
     wire IR_LH;                 /////
     wire MuxDSel;
     wire DR_E;
