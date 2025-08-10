@@ -249,7 +249,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b00000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;                // LSB
+                        MuxCSel = 2'b01;                // LSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -263,7 +263,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b00000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;                // MSB
+                        MuxCSel = 2'b00;                // MSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -330,7 +330,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;                // LSB
+                        MuxCSel = 2'b11;                // LSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -344,7 +344,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;                
+                        MuxCSel = 2'b10;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -358,7 +358,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b10;                
+                        MuxCSel = 2'b01;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -372,7 +372,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b11;                
+                        MuxCSel = 2'b00;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
