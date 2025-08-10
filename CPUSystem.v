@@ -215,241 +215,241 @@ module CPUSystem (
                 end
 
                 6'b000011: begin // POPL    SP ← SP + 1, Rx ← M[SP] (16-bit)
-    if (T[2]) begin
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-    end
-    else if (T[3]) begin  // DR[15:8] <- M[SP] (MSB first) | SP <- SP + 1
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b10;      // left shift and load (MSB goes to upper bits)
-    end
-    else if (T[4]) begin  // DR[7:0] <- M[SP] (LSB second)
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b01;      // load (LSB goes to lower bits)
-    end
-    else if (T[5]) begin  // Rx <- DR
-        MuxASel = 2'b10;   // DROut
-        RF_RegSel = r_sel; 
-        RF_FunSel = 3'b101;
-        ResetT();
-    end   
-end
+                    if (T[2]) begin
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                    end
+                    else if (T[3]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b01;      // load
+                    end
+                    else if (T[4]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b10;      // left shift and load
+                    end
+                    else if (T[5]) begin  // Rx <- DR
+                        MuxASel = 2'b10;   // DROut
+                        RF_RegSel = r_sel; 
+                        RF_FunSel = 3'b101;
+                        ResetT();
+                    end   
+                end
 
                 6'b000100: begin // PSHL    M[SP] ← Rx, SP ← SP – 1 (16-bit)
-    if (T[2]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b00000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b01;                // MSB first (big-endian)
+                    if (T[2]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b00000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b00;                // LSB
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end    
-    if (T[3]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b00000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b00;                // LSB second (big-endian)
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end    
+                    if (T[3]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b00000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b01;                // MSB
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
 
-        ResetT();
-    end      
-end
+                        ResetT();
+                    end      
+                end
 
                 6'b000101: begin // POPH    SP ← SP + 1, Rx ← M[SP] (32-bit)
-    if (T[2]) begin
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-    end
-    else if (T[3]) begin  // DR[31:24] <- M[SP] (MSB first) | SP <- SP + 1
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b10;      // left shift and load
-    end
-    else if (T[4]) begin  // DR[23:16] <- M[SP] | SP <- SP + 1
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b10;      // left shift and load
-    end
-    else if (T[5]) begin  // DR[15:8] <- M[SP] | SP <- SP + 1
-        ARF_RegSel = 3'b010;    // SP
-        ARF_FunSel = 2'b01;     // increment
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b10;      // left shift and load
-    end
-    else if (T[6]) begin  // DR[7:0] <- M[SP] (LSB last)
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b01;      // load (no shift for last byte)
-    end
-    else if (T[7]) begin  // Rx <- DR
-        MuxASel = 2'b10;        // DROut
-        RF_RegSel = r_sel; 
-        RF_FunSel = 3'b010;     // load
-        ResetT();
-    end     
-end
+                    if (T[2]) begin
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                    end
+                    else if (T[3]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b01;      // load
+                        
+                    end
+                    else if (T[4]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b10;      // left shift and load
+                    end
+                    else if (T[5]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_RegSel = 3'b010;    // SP
+                        ARF_FunSel = 2'b01;     // increment
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b10;      // left shift and load
+                    end
+                    else if (T[6]) begin  // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b10;      // left shift and load
+                    end
+                    else if (T[7]) begin  // Rx <- DR
+                        MuxASel = 2'b10;        // DROut
+                        RF_RegSel = r_sel; 
+                        RF_FunSel = 3'b010;     // load
+                        ResetT();
+                    end     
+                end
 
                 6'b000110: begin // PSHH    M[SP] ← Rx, SP ← SP – 1 (32-bit)
-    if (T[2]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b10000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b11;                // MSB first (bits 31:24)
+                    if (T[2]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b10000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b00;                // LSB
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end    
-    if (T[3]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b10000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b10;                // Second byte (bits 23:16)
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end    
+                    if (T[3]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b10000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b01;                
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end
-    if (T[4]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b10000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b01;                // Third byte (bits 15:8)
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end
+                    if (T[4]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b10000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b10;                
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end
-    if (T[5]) begin
-        RF_OutASel = {1'b0, RegSel};    // Rx
-        MuxDSel = 0;                    // OutA
-        ALU_FunSel = 5'b10000;          // A
-        ALU_WF = 1;
-        MuxCSel = 2'b00;                // LSB last (bits 7:0)
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end
+                    if (T[5]) begin
+                        RF_OutASel = {1'b0, RegSel};    // Rx
+                        MuxDSel = 0;                    // OutA
+                        ALU_FunSel = 5'b10000;          // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b11;                
 
-        ARF_OutDSel = 2'b01;            // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;            // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
 
-        ResetT();
-    end
-end
+                        ResetT();
+                    end
+                end
 
                 6'b000111: begin // CALL    M[SP] <- PC, SP <- SP – 1, PC <- VALUE (16 bit)
-    if (T[2]) begin
-        ARF_OutCSel = 2'b00;    // PC
-        MuxDSel = 1;            // OutC
-        ALU_FunSel = 5'b00000;  // A
-        ALU_WF = 1;
-        MuxCSel = 2'b01;        // MSB first (big-endian)
+                    if (T[2]) begin
+                        ARF_OutCSel = 2'b00;    // PC
+                        MuxDSel = 1;            // OutC
+                        ALU_FunSel = 5'b00000;  // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b00;        // LSB
 
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end    
-    if (T[3]) begin
-        ARF_OutCSel = 2'b00;    // PC
-        MuxDSel = 1;            // OutC
-        ALU_FunSel = 5'b00000;  // A
-        ALU_WF = 1;
-        MuxCSel = 2'b00;        // LSB second (big-endian)
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end    
+                    if (T[3]) begin
+                        ARF_OutCSel = 2'b00;    // PC
+                        MuxDSel = 1;            // OutC
+                        ALU_FunSel = 5'b00000;  // A
+                        ALU_WF = 1;
+                        MuxCSel = 2'b01;        // MSB
 
-        ARF_OutDSel = 2'b01;    // SP
-        Mem_CS = 0;
-        Mem_WR = 1;
+                        ARF_OutDSel = 2'b01;    // SP
+                        Mem_CS = 0;
+                        Mem_WR = 1;
 
-        ARF_RegSel = 3'b010;    
-        ARF_FunSel = 2'b00; // decrement SP
-    end 
-    if (T[4]) begin
-        MuxBSel = 2'b11; 
-        ARF_RegSel = 3'b100;    // PC
-        ARF_FunSel = 2'b10;     // load
-        ResetT();
-    end 
-end
-
+                        ARF_RegSel = 3'b010;    
+                        ARF_FunSel = 2'b00; // decrement SP
+                    end 
+                    if (T[4]) begin
+                        MuxBSel = 2'b11; 
+                        ARF_RegSel = 3'b100;    // PC
+                        ARF_FunSel = 2'b10;     // load
+                        ResetT();
+                    end 
+                end
 
                 6'b001000: begin // RET     SP <- SP + 1, PC <- M[SP] (16 bit)
-    if (T[2]) begin
-        ARF_RegSel = 3'b010;  // SP
-        ARF_FunSel = 2'b01;   // increment
-    end
-    else if (T[3]) begin  // DR[15:8] <- M[SP] (MSB first) | SP <- SP + 1
-        ARF_RegSel = 3'b010;  // SP
-        ARF_FunSel = 2'b01;   // increment
-        ARF_OutDSel = 2'b01;   // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b10;  // left shift and load
-    end
-    else if (T[4]) begin  // DR[7:0] <- M[SP] (LSB second)
-        ARF_OutDSel = 2'b01;   // SP
-        Mem_CS = 0; 
-        Mem_WR = 0;
-        DR_E = 1;
-        DR_FunSel = 2'b01;  // load
-    end
-    else if (T[5]) begin  // PC <- DR
-        MuxBSel = 2'b10;        // DROut
-        ARF_RegSel = 3'b100;    // PC
-        ARF_FunSel = 2'b10;     // load
-        ResetT();
-    end
-end
+                    if (T[2]) begin
+                        ARF_RegSel = 3'b010;  // SP
+                        ARF_FunSel = 2'b01;   // increment
+                    end
+                    else if (T[3]) begin  // // DR[7:0] <- M[SP] | SP <- SP + 1
+                        ARF_RegSel = 3'b010;  // SP
+                        ARF_FunSel = 2'b01;   // increment
+                        ARF_OutDSel = 2'b01;   // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b01;
+                    end
+                    else if (T[4]) begin  // DR[7:0] <- M[AR] 
+                        ARF_OutDSel = 2'b01;   // SP
+                        Mem_CS = 0; 
+                        Mem_WR = 0;
+                        DR_E = 1;
+                        DR_FunSel = 2'b10;  // left shift and load
+                    end
+                    else if (T[5]) begin  // PC <- DR
+                        MuxBSel = 2'b10;        // DROut
+                        ARF_RegSel = 3'b100;    // PC
+                        ARF_FunSel = 2'b10;     // load
+                        ResetT();
+                    end
+                end
 
                 6'b001001: begin // INC     // DSTREG <- SREG1 + 1
                     if (T[2]) begin
