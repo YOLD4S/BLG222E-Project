@@ -1,11 +1,5 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: ITU Computer Engineering Department
-// Engineer: Abdullah Akcan
-// Project Name: BLG222E Project 2 Simulation
-//////////////////////////////////////////////////////////////////////////////////
-
-module r_selector (
+module RegisterSelector (
     input [1:0] in,
     output reg [3:0] out
     );
@@ -21,7 +15,7 @@ module r_selector (
     end
 endmodule
 
-module r_rf_selector (
+module ARFSelector (
     input [2:0] in,
     output reg [3:0] rf_out,
     output reg [2:0] arf_out
@@ -100,10 +94,10 @@ module CPUSystem (
     wire [2:0] arf_src1;
     wire [2:0] arf_src2;
 
-    r_selector rsel (.in(RegSel), .out(r_sel));
-    r_rf_selector destsel (.in(DestReg), .rf_out(rf_dest), .arf_out(arf_dest));
-    r_rf_selector src1sel (.in(SrcReg1), .rf_out(rf_src1), .arf_out(arf_src1));
-    r_rf_selector src2sel (.in(SrcReg2), .rf_out(rf_src2), .arf_out(arf_src2));
+    RegisterSelector rsel (.in(RegSel), .out(r_sel));
+    ARFSelector destsel (.in(DestReg), .rf_out(rf_dest), .arf_out(arf_dest));
+    ARFSelector src1sel (.in(SrcReg1), .rf_out(rf_src1), .arf_out(arf_src1));
+    ARFSelector src2sel (.in(SrcReg2), .rf_out(rf_src2), .arf_out(arf_src2));
 
     task ClearRegisters;
         begin
@@ -145,10 +139,10 @@ module CPUSystem (
 
     always @(posedge Clock or negedge Reset) begin
         if (!Reset || T_Reset) begin
-            T <= 12'b000000000001; // Reset T to 1
+            T <= 12'b000000000001;
             T_Reset <= 0;
         end
-        else // shift < T one bit to the left
+        else 
             T <= {T[10:0], T[11]};
     end
 
@@ -157,15 +151,14 @@ module CPUSystem (
             DisableAll();
             ClearRegisters();
         end
-        DisableAll();   // to prevent any wrong operation
+        DisableAll(); 
 
         if (T[0]) begin // IR[7:0] <- M[PC]
             ARF_OutDSel = 2'b00; // PC
-            Mem_CS = 1'b0;       // Enable memory
-            Mem_WR = 1'b0;       // Memory read 
-            IR_Write = 1'b1;     // Enable writing 
-            IR_LH = 1'b0;        // Load LSB
-            // PC+1
+            Mem_CS = 1'b0;       
+            Mem_WR = 1'b0;       
+            IR_Write = 1'b1;     
+            IR_LH = 1'b0;        
             ARF_RegSel = 3'b100; // PC
             ARF_FunSel = 2'b01;  // Increment
         end
@@ -176,9 +169,8 @@ module CPUSystem (
             Mem_WR = 1'b0;       
             IR_Write = 1'b1;     
             IR_LH = 1'b1;        
-            // PC <= PC+1 
-            ARF_RegSel = 3'b100; // Enable PC
-            ARF_FunSel = 2'b01;  // Increment
+            ARF_RegSel = 3'b100;
+            ARF_FunSel = 2'b01; 
         end
 
         else begin
@@ -249,7 +241,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b00000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;                // LSB
+                        MuxCSel = 2'b00;                // LSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -263,7 +255,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b00000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;                // MSB
+                        MuxCSel = 2'b01;                // MSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -330,7 +322,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b11;                // LSB
+                        MuxCSel = 2'b00;                // LSB
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -344,7 +336,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b10;                
+                        MuxCSel = 2'b01;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -358,7 +350,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;                
+                        MuxCSel = 2'b10;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -372,7 +364,7 @@ module CPUSystem (
                         MuxDSel = 0;                    // OutA
                         ALU_FunSel = 5'b10000;          // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;                
+                        MuxCSel = 2'b11;                
 
                         ARF_OutDSel = 2'b01;            // SP
                         Mem_CS = 0;
@@ -391,7 +383,7 @@ module CPUSystem (
                         MuxDSel = 1;            // OutC
                         ALU_FunSel = 5'b00000;  // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b01;        // LSB
+                        MuxCSel = 2'b00;        // LSB
 
                         ARF_OutDSel = 2'b01;    // SP
                         Mem_CS = 0;
@@ -405,7 +397,7 @@ module CPUSystem (
                         MuxDSel = 1;            // OutC
                         ALU_FunSel = 5'b00000;  // A
                         ALU_WF = 1;
-                        MuxCSel = 2'b00;        // MSB
+                        MuxCSel = 2'b01;        // MSB
 
                         ARF_OutDSel = 2'b01;    // SP
                         Mem_CS = 0;
@@ -1306,14 +1298,14 @@ module CPUSystem (
                             MuxDSel = 0;
                             ALU_FunSel = 5'b10000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b00;
+                            MuxCSel = 2'b11;
                         end
                         else begin  // ARF registers
                             ARF_RegSel = SrcReg1[1:0];
                             MuxDSel = 1;
                             ALU_FunSel = 5'b00000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b00;
+                            MuxCSel = 2'b01;
                         end
 
                         ARF_OutDSel = 2'b10; // AR
@@ -1328,7 +1320,7 @@ module CPUSystem (
                             MuxDSel = 0;
                             ALU_FunSel = 5'b10000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b01;
+                            MuxCSel = 2'b10;
                             ARF_RegSel = 3'b001;
                             ARF_FunSel = 2'b01;   // increment AR
                         end
@@ -1337,7 +1329,7 @@ module CPUSystem (
                             MuxDSel = 1;
                             ALU_FunSel = 5'b00000;
                             ALU_WF = 1;
-                            MuxCSel = 2'b01;
+                            MuxCSel = 2'b00;
                             ResetT();   // 2 cycle is enough for arf registers (16-bit)
                         end
 
@@ -1350,7 +1342,7 @@ module CPUSystem (
                         MuxDSel = 0;
                         ALU_FunSel = 5'b10000;
                         ALU_WF = 1;
-                        MuxCSel = 2'b10;
+                        MuxCSel = 2'b01;
 
                         ARF_RegSel = 3'b001;
                         ARF_FunSel = 2'b01;   // increment AR
@@ -1363,7 +1355,7 @@ module CPUSystem (
                         MuxDSel = 0;
                         ALU_FunSel = 5'b10000;
                         ALU_WF = 1;
-                        MuxCSel = 2'b11;
+                        MuxCSel = 2'b00;
                         ARF_OutDSel = 2'b10; // AR
                         Mem_CS = 0;
                         Mem_WR = 1;   // write active

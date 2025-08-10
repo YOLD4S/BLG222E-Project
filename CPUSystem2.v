@@ -11,7 +11,7 @@ module CPUSystem (
     wire Mem_CS;                /////
     wire IR_LH;                 /////
     wire MuxDSel;
-    wire DR_E;
+    wire DR_E;                  /////
     wire [1:0] MuxCSel;
     wire [1:0] ARF_OutCSel;
     wire [1:0] ARF_OutDSel;
@@ -55,6 +55,8 @@ module CPUSystem (
     assign SrcReg2 = rrr ? IROut[3:1] : 3'b000;
     assign RegSel = IROut[9:8];    //????
     assign Address = IROut[7:0];   //????
+    assign DR_E = (~T4 && (D3 || D8 || D27 || D33)) || (~T6 && (D5 || D28 || D34)) || (~T2 && (D30 && ~T5) && (D31 && ~T7));
+
 
     assign Mem_CS = 0;
     assign Mem_WR = D4 || D6 || (D7 && ~T4) || (D8 && T3) || D29 || ((D32 || D36) && ~T2)
